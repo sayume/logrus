@@ -81,7 +81,7 @@ func New() *Logger {
 // sourced adds a source field to the logger that contains
 // the file name and line where the logging happened.
 func (logger *Logger) sourced() *Entry {
-	_, file, line, ok := runtime.Caller(0)
+	_, file, line, ok := runtime.Caller(3)
 	if !ok {
 		file = "<???>"
 		line = 1
