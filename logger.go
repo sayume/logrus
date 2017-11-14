@@ -123,7 +123,7 @@ func (logger *Logger) WithField(key string, value interface{}) *Entry {
 // Adds a struct of fields to the log entry. All it does is call `WithField` for
 // each `Field`.
 func (logger *Logger) WithFields(fields Fields) *Entry {
-	entry := logger.newEntry()
+	entry := logger.sourced()
 	defer logger.releaseEntry(entry)
 	return entry.WithFields(fields)
 }
@@ -131,7 +131,7 @@ func (logger *Logger) WithFields(fields Fields) *Entry {
 // Add an error as single field to the log entry.  All it does is call
 // `WithError` for the given `error`.
 func (logger *Logger) WithError(err error) *Entry {
-	entry := logger.newEntry()
+	entry := logger.sourced()
 	defer logger.releaseEntry(entry)
 	return entry.WithError(err)
 }
