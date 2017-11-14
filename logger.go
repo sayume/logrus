@@ -89,7 +89,14 @@ func (logger *Logger) sourced() *Entry {
 		slash := strings.LastIndex(file, "/")
 		file = file[slash+1:]
 	}
-	return logger.WithField("source", fmt.Sprintf("%s:%d", file, line))
+	data := make(Fields, 5)
+	data["source"] = fmt.Sprintf("%s:%d", file, line)
+	entry := &Entry{
+		Logger: logger,
+		Data:   data,
+	}
+	return entry
+	//return logger.WithField("source", fmt.Sprintf("%s:%d", file, line))
 }
 
 func (logger *Logger) newEntry() *Entry {
@@ -116,7 +123,7 @@ func (logger *Logger) WithField(key string, value interface{}) *Entry {
 // Adds a struct of fields to the log entry. All it does is call `WithField` for
 // each `Field`.
 func (logger *Logger) WithFields(fields Fields) *Entry {
-	entry := logger.sourced()
+	entry := logger.newEntry()
 	defer logger.releaseEntry(entry)
 	return entry.WithFields(fields)
 }
@@ -124,7 +131,7 @@ func (logger *Logger) WithFields(fields Fields) *Entry {
 // Add an error as single field to the log entry.  All it does is call
 // `WithError` for the given `error`.
 func (logger *Logger) WithError(err error) *Entry {
-	entry := logger.sourced()
+	entry := logger.newEntry()
 	defer logger.releaseEntry(entry)
 	return entry.WithError(err)
 }
